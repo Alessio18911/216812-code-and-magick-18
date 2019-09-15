@@ -14,7 +14,7 @@ var FONT = '16px PT Mono';
 var TEXT_COLOR = '#000000';
 
 var PADDING_LEFT = CLOUD_X + 40;
-var COLUMN_PADDING_BOTTOM = CLOUD_Y + CLOUD_HEIGHT - 50;
+var COLUMN_PADDING_BOTTOM = CLOUD_Y + CLOUD_HEIGHT - 37;
 var HIST_HEIGHT = 150;
 var COLUMN_WIDTH = 40;
 var COLUMN_OFFSET = 50;
@@ -48,23 +48,35 @@ var getColumnColor = function (name) {
   return 'hsl(240, 100%, ' + lightness + '%)';
 };
 
-var outputName = function (ctx, name, offsetX) {
+var setTextParams = function (ctx) {
   ctx.font = FONT;
   ctx.fillStyle = TEXT_COLOR;
+};
+
+var outputName = function (ctx, offsetX, name) {
+  setTextParams(ctx);
   var offsetY = COLUMN_PADDING_BOTTOM + 20;
   ctx.fillText(name, offsetX, offsetY);
 };
 
-var outputTime = function (ctx, time, offsetX, columnHeight) {
-  ctx.font = FONT;
-  ctx.fillStyle = TEXT_COLOR;
+var outputTime = function (ctx, offsetX, time, columnHeight) {
+  setTextParams(ctx);
   var offsetY = COLUMN_PADDING_BOTTOM - columnHeight - 10;
   ctx.fillText(Math.round(time), offsetX, offsetY);
+};
+
+var outputTitle = function (ctx) {
+  setTextParams(ctx);
+  var offsetX = CLOUD_X + 20;
+  var offsetY = CLOUD_Y + 30;
+  ctx.fillText('Ура, Вы победили!', offsetX, offsetY);
+  ctx.fillText('Список результатов:', offsetX, offsetY + 20);
 };
 
 window.renderStatistics = function (ctx, names, times) {
   renderRectangle(ctx, SHADOW_COLOR, SHADOW_X, SHADOW_Y, CLOUD_WIDTH, CLOUD_HEIGHT);
   renderRectangle(ctx, CLOUD_COLOR, CLOUD_X, CLOUD_Y, CLOUD_WIDTH, CLOUD_HEIGHT);
+  outputTitle(ctx);
 
   var startOffsetX = PADDING_LEFT;
 
@@ -72,8 +84,8 @@ window.renderStatistics = function (ctx, names, times) {
     var columnHeight = getColumnHeight(times, times[i]);
     var columnColor = getColumnColor(names[i]);
 
-    outputName(ctx, names[i], startOffsetX);
-    outputTime(ctx, times[i], startOffsetX, columnHeight);
+    outputName(ctx, startOffsetX, names[i]);
+    outputTime(ctx, startOffsetX, times[i], columnHeight);
     renderRectangle(ctx, columnColor, startOffsetX, COLUMN_PADDING_BOTTOM, COLUMN_WIDTH, -columnHeight);
 
     startOffsetX += NEXT_COLUMN_X;
