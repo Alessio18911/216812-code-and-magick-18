@@ -1,7 +1,9 @@
 'use strict';
 
-var WIZARDS_SHEET = document.querySelector('.setup');
-WIZARDS_SHEET.classList.remove('hidden');
+var wizardsSheet = document.querySelector('.setup');
+wizardsSheet.classList.remove('hidden');
+var similarWizardsContainer = wizardsSheet.querySelector('.setup-similar');
+var similarWizardsList = wizardsSheet.querySelector('.setup-similar-list');
 
 var FIRST_NAMES = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
 var LAST_NAMES = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
@@ -9,8 +11,6 @@ var COAT_COLORS = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161
 var EYES_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
 var WIZARDS_PROPS = [];
 var WIZARDS_AMOUNT = 4;
-var SIMILAR_WIZARDS_CONTAINER = WIZARDS_SHEET.querySelector('.setup-similar');
-var SIMILAR_WIZARDS_LIST = WIZARDS_SHEET.querySelector('.setup-similar-list');
 
 var getArrayElement = function (array) {
   var index = Math.floor(Math.random() * array.length);
@@ -50,9 +50,9 @@ var renderWizards = function (wizardsProps) {
     fragment.appendChild(template);
   }
 
-  SIMILAR_WIZARDS_LIST.appendChild(fragment);
+  similarWizardsList.appendChild(fragment);
 
-  SIMILAR_WIZARDS_CONTAINER.classList.remove('hidden');
+  similarWizardsContainer.classList.remove('hidden');
 };
 
 renderWizards(WIZARDS_PROPS);
