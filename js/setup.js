@@ -1,16 +1,21 @@
 'use strict';
 
-var wizardsSheet = document.querySelector('.setup');
-wizardsSheet.classList.remove('hidden');
-var similarWizardsContainer = wizardsSheet.querySelector('.setup-similar');
-var similarWizardsList = wizardsSheet.querySelector('.setup-similar-list');
-
 var FIRST_NAMES = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
 var LAST_NAMES = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
 var COAT_COLORS = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
 var EYES_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
 var WIZARDS_PROPS = [];
 var WIZARDS_AMOUNT = 4;
+var ENTER_KEYCODE = 13;
+var ESCAPE_KEYCODE = 27;
+
+var wizardsSheet = document.querySelector('.setup');
+var wizardsSheetOpenButton = document.querySelector('.setup-open');
+var wizardsSheetCloseButton = wizardsSheet.querySelector('.setup-close');
+var wizardsSheetIcon = document.querySelector('.setup-open-icon');
+var similarWizardsContainer = wizardsSheet.querySelector('.setup-similar');
+var similarWizardsList = wizardsSheet.querySelector('.setup-similar-list');
+var userName = wizardsSheet.querySelector('.setup-user-name');
 
 var getArrayElement = function (array) {
   var index = Math.floor(Math.random() * array.length);
@@ -54,5 +59,34 @@ var renderWizards = function (wizardsProps) {
 
   similarWizardsContainer.classList.remove('hidden');
 };
+
+var openWizardsSheet = function () {
+  wizardsSheet.classList.remove('hidden');
+};
+
+var closeWizardsSheet = function () {
+  wizardsSheet.classList.add('hidden');
+};
+
+wizardsSheetOpenButton.addEventListener('click', openWizardsSheet);
+wizardsSheetCloseButton.addEventListener('click', closeWizardsSheet);
+wizardsSheetCloseButton.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    closeWizardsSheet();
+  }
+});
+
+wizardsSheetIcon.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    openWizardsSheet();
+  }
+});
+
+document.addEventListener('keydown', function (evt) {
+  var focusedElement = document.activeElement;
+  if (evt.keyCode === ESCAPE_KEYCODE && focusedElement !== userName) {
+    closeWizardsSheet();
+  }
+});
 
 renderWizards(WIZARDS_PROPS);
