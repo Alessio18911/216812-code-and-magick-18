@@ -4,7 +4,7 @@ var FIRST_NAMES = ['Иван', 'Хуан Себастьян', 'Мария', 'К�
 var LAST_NAMES = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
 var COAT_COLORS = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
 var EYES_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
-var FIREBALLS_COLORS = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
+var FIREBALL_COLORS = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
 var WIZARDS_PROPS = [];
 var WIZARDS_AMOUNT = 4;
 var ENTER_KEYCODE = 13;
@@ -17,6 +17,29 @@ var wizardsSheetIcon = document.querySelector('.setup-open-icon');
 var similarWizardsContainer = wizardsSheet.querySelector('.setup-similar');
 var similarWizardsList = wizardsSheet.querySelector('.setup-similar-list');
 var userName = wizardsSheet.querySelector('.setup-user-name');
+var myWizard = document.querySelector('.setup-player');
+
+var counter = function () {
+  var i = 1;
+
+  return {
+    count: function (arrayLength) {
+      if (i === arrayLength) {
+        this.reset();
+      }
+
+      return i++;
+    },
+
+    reset: function () {
+      i = 0;
+    }
+  };
+};
+
+var counterForEyesColor = counter();
+var counterForCoatColor = counter();
+var counterForFireballColor = counter();
 
 var getArrayElement = function (array) {
   var index = Math.floor(Math.random() * array.length);
@@ -68,6 +91,34 @@ var openWizardsSheet = function () {
 var closeWizardsSheet = function () {
   wizardsSheet.classList.add('hidden');
 };
+
+var colorizeMyWizard = function (counterForArrayIndexes, colorArray, article) {
+  var arrayLength = colorArray.length;
+  var index = counterForArrayIndexes.count(arrayLength);
+  var color = colorArray[index];
+
+  if (article.classList.contains('setup-fireball')) {
+    article.parentNode.style.backgroundColor = color;
+    return color;
+  }
+
+  article.style.fill = color;
+  return color;
+};
+
+myWizard.addEventListener('click', function (evt) {
+  if (evt.target.classList.contains('wizard-eyes')) {
+    colorizeMyWizard(counterForEyesColor, EYES_COLORS, evt.target);
+  }
+
+  if (evt.target.classList.contains('wizard-coat')) {
+    colorizeMyWizard(counterForCoatColor, COAT_COLORS, evt.target);
+  }
+
+  if (evt.target.classList.contains('setup-fireball')) {
+    colorizeMyWizard(counterForFireballColor, FIREBALL_COLORS, evt.target);
+  }
+});
 
 wizardsSheetOpenButton.addEventListener('click', openWizardsSheet);
 wizardsSheetCloseButton.addEventListener('click', closeWizardsSheet);
