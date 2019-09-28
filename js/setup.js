@@ -18,6 +18,9 @@ var similarWizardsContainer = wizardsSheet.querySelector('.setup-similar');
 var similarWizardsList = wizardsSheet.querySelector('.setup-similar-list');
 var userName = wizardsSheet.querySelector('.setup-user-name');
 var myWizard = document.querySelector('.setup-player');
+var eyesColorInput = myWizard.querySelector('input[name=\'eyes-color\']');
+var coatColorInput = myWizard.querySelector('input[name=\'coat-color\']');
+var fireballColorInput = myWizard.querySelector('input[name=\'fireball-color\']');
 
 var counter = function () {
   var i = 1;
@@ -36,10 +39,6 @@ var counter = function () {
     }
   };
 };
-
-var counterForEyesColor = counter();
-var counterForCoatColor = counter();
-var counterForFireballColor = counter();
 
 var getArrayElement = function (array) {
   var index = Math.floor(Math.random() * array.length);
@@ -106,17 +105,21 @@ var colorizeMyWizard = function (counterForArrayIndexes, colorArray, article) {
   return color;
 };
 
+var counterForEyesColor = counter();
+var counterForCoatColor = counter();
+var counterForFireballColor = counter();
+
 myWizard.addEventListener('click', function (evt) {
   if (evt.target.classList.contains('wizard-eyes')) {
-    colorizeMyWizard(counterForEyesColor, EYES_COLORS, evt.target);
+    eyesColorInput.value = colorizeMyWizard(counterForEyesColor, EYES_COLORS, evt.target);
   }
 
   if (evt.target.classList.contains('wizard-coat')) {
-    colorizeMyWizard(counterForCoatColor, COAT_COLORS, evt.target);
+    coatColorInput.value = colorizeMyWizard(counterForCoatColor, COAT_COLORS, evt.target);
   }
 
   if (evt.target.classList.contains('setup-fireball')) {
-    colorizeMyWizard(counterForFireballColor, FIREBALL_COLORS, evt.target);
+    fireballColorInput.value = colorizeMyWizard(counterForFireballColor, FIREBALL_COLORS, evt.target);
   }
 });
 
