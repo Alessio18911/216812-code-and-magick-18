@@ -1,12 +1,15 @@
 'use strict';
 
-var FIRST_NAMES = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
-var LAST_NAMES = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
-var COAT_COLORS = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
-var EYES_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
-var FIREBALL_COLORS = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
+var WIZARDS = {
+  firstNames: ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'],
+  lastNames: ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'],
+  coatColors: ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'],
+  eyesColors: ['black', 'red', 'blue', 'yellow', 'green'],
+  fireballColors: ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'],
+  amountOfwizards: 4
+};
+
 var WIZARDS_PROPS = [];
-var WIZARDS_AMOUNT = 4;
 var ENTER_KEYCODE = 13;
 var ESCAPE_KEYCODE = 27;
 
@@ -55,8 +58,8 @@ var getWizardProps = function (firstNames, lastNames, coatColors, eyesColors) {
   return {name: firstName + ' ' + lastName, coatColor: coatColor, eyesColor: eyesColor};
 };
 
-for (var i = 0; i < WIZARDS_AMOUNT; i++) {
-  var wizardProps = getWizardProps(FIRST_NAMES, LAST_NAMES, COAT_COLORS, EYES_COLORS);
+for (var i = 0; i < WIZARDS.amountOfwizards; i++) {
+  var wizardProps = getWizardProps(WIZARDS.firstNames, WIZARDS.lastNames, WIZARDS.coatColors, WIZARDS.eyesColors);
   WIZARDS_PROPS.push(wizardProps);
 }
 
@@ -111,15 +114,15 @@ var counterForFireballColor = counter();
 
 myWizard.addEventListener('click', function (evt) {
   if (evt.target.classList.contains('wizard-eyes')) {
-    eyesColorInput.value = colorizeMyWizard(counterForEyesColor, EYES_COLORS, evt.target);
+    eyesColorInput.value = colorizeMyWizard(counterForEyesColor, WIZARDS.eyesColors, evt.target);
   }
 
   if (evt.target.classList.contains('wizard-coat')) {
-    coatColorInput.value = colorizeMyWizard(counterForCoatColor, COAT_COLORS, evt.target);
+    coatColorInput.value = colorizeMyWizard(counterForCoatColor, WIZARDS.coatColors, evt.target);
   }
 
   if (evt.target.classList.contains('setup-fireball')) {
-    fireballColorInput.value = colorizeMyWizard(counterForFireballColor, FIREBALL_COLORS, evt.target);
+    fireballColorInput.value = colorizeMyWizard(counterForFireballColor, WIZARDS.fireballColors, evt.target);
   }
 });
 
