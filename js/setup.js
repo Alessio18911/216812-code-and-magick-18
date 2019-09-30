@@ -21,9 +21,9 @@ var similarWizardsContainer = wizardsSheet.querySelector('.setup-similar');
 var similarWizardsList = wizardsSheet.querySelector('.setup-similar-list');
 var userName = wizardsSheet.querySelector('.setup-user-name');
 var myWizard = document.querySelector('.setup-player');
-var eyesColorInput = myWizard.querySelector('input[name=\'eyes-color\']');
-var coatColorInput = myWizard.querySelector('input[name=\'coat-color\']');
-var fireballColorInput = myWizard.querySelector('input[name=\'fireball-color\']');
+var eyesColorInput = myWizard.querySelector('input[name="eyes-color"]');
+var coatColorInput = myWizard.querySelector('input[name="coat-color"]');
+var fireballColorInput = myWizard.querySelector('input[name="fireball-color"]');
 
 var counter = function () {
   var i = 1;
