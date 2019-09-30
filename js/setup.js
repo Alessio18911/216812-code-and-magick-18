@@ -81,7 +81,7 @@ var switchColor = function (colorsArray) {
   var index = 0;
 
   return function () {
-    ++index;
+    index += 1;
 
     if (index === colorsNumber) {
       index = 0;
