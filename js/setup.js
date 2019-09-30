@@ -25,24 +25,6 @@ var eyesColorInput = myWizard.querySelector('input[name="eyes-color"]');
 var coatColorInput = myWizard.querySelector('input[name="coat-color"]');
 var fireballColorInput = myWizard.querySelector('input[name="fireball-color"]');
 
-var counter = function () {
-  var i = 1;
-
-  return {
-    count: function (arrayLength) {
-      if (i === arrayLength) {
-        this.reset();
-      }
-
-      return i++;
-    },
-
-    reset: function () {
-      i = 0;
-    }
-  };
-};
-
 var getArrayElement = function (array) {
   var index = Math.floor(Math.random() * array.length);
 
@@ -94,35 +76,52 @@ var closeWizardsSheet = function () {
   wizardsSheet.classList.add('hidden');
 };
 
-var colorizeMyWizard = function (counterForArrayIndexes, colorArray, article) {
-  var arrayLength = colorArray.length;
-  var index = counterForArrayIndexes.count(arrayLength);
-  var color = colorArray[index];
+var switchColor = function (colorsArray) {
+  var colorsNumber = colorsArray.length;
+  var index = 0;
 
-  if (article.classList.contains('setup-fireball')) {
-    article.parentNode.style.backgroundColor = color;
-    return color;
-  }
+  return function () {
+    ++index;
 
-  article.style.fill = color;
-  return color;
+    if (index === colorsNumber) {
+      index = 0;
+    }
+
+    return colorsArray[index];
+  };
 };
 
-var counterForEyesColor = counter();
-var counterForCoatColor = counter();
-var counterForFireballColor = counter();
+var setMyWizardPartColor = function (color, part, input) {
+  input.value = color;
+
+  if (!part.classList.contains('setup-fireball')) {
+    part.style.fill = color;
+    return;
+  }
+
+  part.parentNode.style.backgroundColor = color;
+};
+
+var chooseEyesColor = switchColor(WIZARDS.eyesColors);
+var chooseCoatColor = switchColor(WIZARDS.coatColors);
+var chooseFireballColor = switchColor(WIZARDS.fireballColors);
 
 myWizard.addEventListener('click', function (evt) {
-  if (evt.target.classList.contains('wizard-eyes')) {
-    eyesColorInput.value = colorizeMyWizard(counterForEyesColor, WIZARDS.eyesColors, evt.target);
+  var target = evt.target;
+
+  if (target.classList.contains('wizard-eyes')) {
+    var eyesColor = chooseEyesColor();
+    setMyWizardPartColor(eyesColor, target, eyesColorInput);
   }
 
-  if (evt.target.classList.contains('wizard-coat')) {
-    coatColorInput.value = colorizeMyWizard(counterForCoatColor, WIZARDS.coatColors, evt.target);
+  if (target.classList.contains('wizard-coat')) {
+    var coatColor = chooseCoatColor();
+    setMyWizardPartColor(coatColor, target, coatColorInput);
   }
 
-  if (evt.target.classList.contains('setup-fireball')) {
-    fireballColorInput.value = colorizeMyWizard(counterForFireballColor, WIZARDS.fireballColors, evt.target);
+  if (target.classList.contains('setup-fireball')) {
+    var fireballColor = chooseFireballColor();
+    setMyWizardPartColor(fireballColor, target, fireballColorInput);
   }
 });
 
