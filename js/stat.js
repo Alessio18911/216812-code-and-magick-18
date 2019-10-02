@@ -10,7 +10,10 @@
   var CLOUD_HEIGHT = 270;
   var CLOUD_BOTTOM_Y = CLOUD_Y + CLOUD_HEIGHT;
   var CLOUD_PADDING_LEFT = 40;
+  var CLOUD_PADDING_BOTTOM = 20;
   var CLOUD_COLOR = '#ffffff';
+
+  var CONTENT_OFFSET_X = CLOUD_X + CLOUD_PADDING_LEFT;
 
   var SHADOW_OFFSET_X = 10;
   var SHADOW_OFFSET_Y = 10;
@@ -31,12 +34,8 @@
   var TITLE_X = CLOUD_X + TITLE_OFFSET_X;
   var TITLE_Y = CLOUD_Y + TITLE_OFFSET_Y;
   var TITLE_SECOND_ROW_OFFSET_Y = 20;
-
-  var TEXT_OFFSET_FROM_BOTTOM = 20;
-  var TEXT_Y = CLOUD_BOTTOM_Y - TEXT_OFFSET_FROM_BOTTOM;
-  var TIME_OFFSET_FROM_COLUMN_TOP = 10;
-
-  var CONTENT_OFFSET_X = CLOUD_X + CLOUD_PADDING_LEFT;
+  var TEXT_Y = CLOUD_BOTTOM_Y - CLOUD_PADDING_BOTTOM;
+  var TIME_PADDING_BOTTOM = 10;
 
   var toggleIsHistColumn = function (isHistColumn) {
     return !isHistColumn;
@@ -86,7 +85,7 @@
 
   var outputTime = function (ctx, time, timeX, columnHeight) {
     setTextParams(ctx);
-    var timeY = CLOUD_BOTTOM_Y - COLUMN_OFFSET_FROM_BOTTOM - columnHeight - TIME_OFFSET_FROM_COLUMN_TOP;
+    var timeY = CLOUD_BOTTOM_Y - COLUMN_OFFSET_FROM_BOTTOM - columnHeight - TIME_PADDING_BOTTOM;
     ctx.fillText(Math.round(time), timeX, timeY);
   };
 
