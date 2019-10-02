@@ -1,49 +1,41 @@
 'use strict';
 
-var WIZARDS = {
-  firstNames: ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'],
-  lastNames: ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'],
-  coatColors: ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'],
-  eyesColors: ['black', 'red', 'blue', 'yellow', 'green'],
-  fireballColors: ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'],
-  amountOfwizards: 4
-};
-
-var WIZARDS_PROPS = [];
-var ENTER_KEYCODE = 13;
-var ESCAPE_KEYCODE = 27;
-
-var wizardsSheet = document.querySelector('.setup');
-var wizardsSheetOpenButton = document.querySelector('.setup-open');
-var wizardsSheetCloseButton = wizardsSheet.querySelector('.setup-close');
-var wizardsSheetIcon = document.querySelector('.setup-open-icon');
-var similarWizardsContainer = wizardsSheet.querySelector('.setup-similar');
-var similarWizardsList = wizardsSheet.querySelector('.setup-similar-list');
-var userName = wizardsSheet.querySelector('.setup-user-name');
-var myWizard = document.querySelector('.setup-player');
+var settingsPopup = document.querySelector('.setup');
+var settingsPopupOpenButton = document.querySelector('.setup-open');
+var settingsPopupCloseButton = settingsPopup.querySelector('.setup-close');
+var settingsPopupIcon = settingsPopupOpenButton.querySelector('.setup-open-icon');
+var myWizard = settingsPopup.querySelector('.setup-player');
+var similarWizardsContainer = settingsPopup.querySelector('.setup-similar');
+var similarWizardsList = similarWizardsContainer.querySelector('.setup-similar-list');
+var userName = settingsPopup.querySelector('.setup-user-name');
 var eyesColorInput = myWizard.querySelector('input[name="eyes-color"]');
 var coatColorInput = myWizard.querySelector('input[name="coat-color"]');
 var fireballColorInput = myWizard.querySelector('input[name="fireball-color"]');
 
-var getArrayElement = function (array) {
-  var index = Math.floor(Math.random() * array.length);
-
-  return array[index];
-};
-
 var getWizardProps = function (firstNames, lastNames, coatColors, eyesColors) {
-  var firstName = getArrayElement(firstNames);
-  var lastName = getArrayElement(lastNames);
-  var coatColor = getArrayElement(coatColors);
-  var eyesColor = getArrayElement(eyesColors);
+  var firstName = window.util.getArrayElement(firstNames);
+  var lastName = window.util.getArrayElement(lastNames);
+  var coatColor = window.util.getArrayElement(coatColors);
+  var eyesColor = window.util.getArrayElement(eyesColors);
 
   return {name: firstName + ' ' + lastName, coatColor: coatColor, eyesColor: eyesColor};
 };
 
-for (var i = 0; i < WIZARDS.amountOfwizards; i++) {
-  var wizardProps = getWizardProps(WIZARDS.firstNames, WIZARDS.lastNames, WIZARDS.coatColors, WIZARDS.eyesColors);
-  WIZARDS_PROPS.push(wizardProps);
-}
+var getAllWizardsProps = function (wizards) {
+  var WIZARDS_PROPS = [];
+
+  for (var i = 0; i < wizards.amountOfwizards; i++) {
+    var wizardProps = getWizardProps(
+        wizards.firstNames,
+        wizards.lastNames,
+        wizards.coatColors,
+        wizards.eyesColors
+    );
+    WIZARDS_PROPS.push(wizardProps);
+  }
+
+  return WIZARDS_PROPS;
+};
 
 var renderWizards = function (wizardsProps) {
   var fragment = new DocumentFragment();
@@ -64,16 +56,34 @@ var renderWizards = function (wizardsProps) {
   }
 
   similarWizardsList.appendChild(fragment);
-
   similarWizardsContainer.classList.remove('hidden');
 };
 
-var openWizardsSheet = function () {
-  wizardsSheet.classList.remove('hidden');
+var onDocumentKeydown = function (evt) {
+  var focusedElement = document.activeElement;
+  if (evt.keyCode === window.util.ESCAPE_KEYCODE && focusedElement !== userName) {
+    onCloseButtonClick();
+  }
 };
 
-var closeWizardsSheet = function () {
-  wizardsSheet.classList.add('hidden');
+var onOpenButtonClick = function () {
+  settingsPopup.classList.remove('hidden');
+};
+
+var onCloseButtonClick = function () {
+  settingsPopup.classList.add('hidden');
+};
+
+var onCloseButtonKeydown = function (evt) {
+  if (evt.keyCode === window.util.ENTER_KEYCODE) {
+    onCloseButtonClick();
+  }
+};
+
+var onIconKeydown = function (evt) {
+  if (evt.keyCode === window.util.ENTER_KEYCODE) {
+    onOpenButtonClick();
+  }
 };
 
 var switchColor = function (colorsArray) {
@@ -102,11 +112,7 @@ var setMyWizardPartColor = function (color, part, input) {
   part.parentNode.style.backgroundColor = color;
 };
 
-var chooseEyesColor = switchColor(WIZARDS.eyesColors);
-var chooseCoatColor = switchColor(WIZARDS.coatColors);
-var chooseFireballColor = switchColor(WIZARDS.fireballColors);
-
-myWizard.addEventListener('click', function (evt) {
+var onMyWizardClick = function (evt) {
   var target = evt.target;
 
   if (target.classList.contains('wizard-eyes')) {
@@ -123,27 +129,18 @@ myWizard.addEventListener('click', function (evt) {
     var fireballColor = chooseFireballColor();
     setMyWizardPartColor(fireballColor, target, fireballColorInput);
   }
-});
+};
 
-wizardsSheetOpenButton.addEventListener('click', openWizardsSheet);
-wizardsSheetCloseButton.addEventListener('click', closeWizardsSheet);
-wizardsSheetCloseButton.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE) {
-    closeWizardsSheet();
-  }
-});
+var chooseEyesColor = switchColor(window.util.WIZARDS.eyesColors);
+var chooseCoatColor = switchColor(window.util.WIZARDS.coatColors);
+var chooseFireballColor = switchColor(window.util.WIZARDS.fireballColors);
 
-wizardsSheetIcon.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE) {
-    openWizardsSheet();
-  }
-});
+myWizard.addEventListener('click', onMyWizardClick);
+document.addEventListener('keydown', onDocumentKeydown);
+settingsPopupOpenButton.addEventListener('click', onOpenButtonClick);
+settingsPopupCloseButton.addEventListener('click', onCloseButtonClick);
+settingsPopupCloseButton.addEventListener('keydown', onCloseButtonKeydown);
+settingsPopupIcon.addEventListener('keydown', onIconKeydown);
 
-document.addEventListener('keydown', function (evt) {
-  var focusedElement = document.activeElement;
-  if (evt.keyCode === ESCAPE_KEYCODE && focusedElement !== userName) {
-    closeWizardsSheet();
-  }
-});
-
-renderWizards(WIZARDS_PROPS);
+var ALL_WIZARDS_PROPS = getAllWizardsProps(window.util.WIZARDS, window.util.WIZARDS, window.util.WIZARDS, window.util.WIZARDS, window.util.WIZARDS);
+renderWizards(ALL_WIZARDS_PROPS);
