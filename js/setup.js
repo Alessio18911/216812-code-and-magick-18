@@ -90,7 +90,7 @@
     popup.style.top = coordY;
   };
 
-  var onDocumentKeydown = function (evt) {
+  var onKeydown = function (evt) {
     var focusedElement = document.activeElement;
     if (evt.keyCode === window.util.ESCAPE_KEYCODE && focusedElement !== userName) {
       onCloseButtonClick();
@@ -148,7 +148,7 @@
     }
   };
 
-  document.addEventListener('keydown', onDocumentKeydown);
+  document.addEventListener('keydown', onKeydown);
   myWizard.addEventListener('click', onMyWizardClick);
   settingsPopupOpenButton.addEventListener('click', onOpenButtonClick);
   settingsPopupCloseButton.addEventListener('click', onCloseButtonClick);
