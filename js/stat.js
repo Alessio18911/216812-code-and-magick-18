@@ -1,93 +1,118 @@
 'use strict';
 
-var CLOUD_WIDTH = 420;
-var CLOUD_HEIGHT = 270;
-var CLOUD_X = 100;
-var CLOUD_Y = 10;
-var CLOUD_COLOR = '#ffffff';
+(function () {
+  var FONT = '16px PT Mono';
+  var TEXT_COLOR = '#000000';
 
-var SHADOW_COLOR = 'rgba(0, 0, 0, 0.7)';
-var SHADOW_X = CLOUD_X + 10;
-var SHADOW_Y = CLOUD_Y + 10;
+  var CLOUD_X = 100;
+  var CLOUD_Y = 10;
+  var CLOUD_WIDTH = 420;
+  var CLOUD_HEIGHT = 270;
+  var CLOUD_BOTTOM_Y = CLOUD_Y + CLOUD_HEIGHT;
+  var CLOUD_PADDING_LEFT = 40;
+  var CLOUD_PADDING_BOTTOM = 20;
+  var CLOUD_COLOR = '#ffffff';
 
-var FONT = '16px PT Mono';
-var TEXT_COLOR = '#000000';
+  var CONTENT_OFFSET_X = CLOUD_X + CLOUD_PADDING_LEFT;
 
-var PADDING_LEFT = CLOUD_X + 40;
-var COLUMN_PADDING_BOTTOM = CLOUD_Y + CLOUD_HEIGHT - 37;
-var HIST_HEIGHT = 150;
-var COLUMN_WIDTH = 40;
-var COLUMN_OFFSET = 50;
-var NEXT_COLUMN_X = COLUMN_WIDTH + COLUMN_OFFSET;
-var MY_COLUMN_COLOR = 'rgba(255, 0, 0, 1)';
+  var SHADOW_OFFSET_X = 10;
+  var SHADOW_OFFSET_Y = 10;
+  var SHADOW_X = CLOUD_X + SHADOW_OFFSET_X;
+  var SHADOW_Y = CLOUD_Y + SHADOW_OFFSET_Y;
+  var SHADOW_COLOR = 'rgba(0, 0, 0, 0.7)';
 
-var renderRectangle = function (ctx, color, offsetX, offsetY, width, height) {
-  ctx.fillStyle = color;
-  ctx.fillRect(offsetX, offsetY, width, height);
-};
+  var HIST_HEIGHT = 0.55 * CLOUD_HEIGHT;
+  var COLUMN_WIDTH = 40;
+  var COLUMNS_SPACE = 50;
+  var COLUMN_OFFSET_FROM_BOTTOM = 40;
+  var NEXT_COLUMN_X = COLUMN_WIDTH + COLUMNS_SPACE;
+  var MY_COLUMN_COLOR = 'rgba(255, 0, 0, 1)';
+  var IS_HIST_COLUMN = false;
 
-var getDivisionValue = function (times) {
-  var maxTime = Math.round(Math.max.apply(null, times));
-  var divisionValue = HIST_HEIGHT / maxTime;
+  var TITLE_OFFSET_X = 20;
+  var TITLE_OFFSET_Y = 30;
+  var TITLE_X = CLOUD_X + TITLE_OFFSET_X;
+  var TITLE_Y = CLOUD_Y + TITLE_OFFSET_Y;
+  var TITLE_SECOND_ROW_OFFSET_Y = 20;
+  var TEXT_Y = CLOUD_BOTTOM_Y - CLOUD_PADDING_BOTTOM;
+  var TIME_PADDING_BOTTOM = 10;
 
-  return divisionValue;
-};
+  var toggleIsHistColumn = function (isHistColumn) {
+    return !isHistColumn;
+  };
 
-var getColumnHeight = function (times, time) {
-  var divisionValue = getDivisionValue(times);
+  var renderRectangle = function (ctx, rectX, rectY, width, height, color) {
+    ctx.fillStyle = color;
 
-  return Math.round(divisionValue * time);
-};
+    if (IS_HIST_COLUMN) {
+      height = -height;
+    }
 
-var getColumnColor = function (name) {
-  if (name === 'Вы') {
-    return MY_COLUMN_COLOR;
-  }
+    ctx.fillRect(rectX, rectY, width, height);
+  };
 
-  var lightness = Math.floor(Math.random() * 100);
-  return 'hsl(240, 100%, ' + lightness + '%)';
-};
+  var getDivisionValue = function (times) {
+    var maxTime = Math.round(Math.max.apply(null, times));
+    var divisionValue = HIST_HEIGHT / maxTime;
 
-var setTextParams = function (ctx) {
-  ctx.font = FONT;
-  ctx.fillStyle = TEXT_COLOR;
-};
+    return divisionValue;
+  };
 
-var outputName = function (ctx, offsetX, name) {
-  setTextParams(ctx);
-  var offsetY = COLUMN_PADDING_BOTTOM + 20;
-  ctx.fillText(name, offsetX, offsetY);
-};
+  var getColumnHeight = function (times, time) {
+    var divisionValue = getDivisionValue(times);
 
-var outputTime = function (ctx, offsetX, time, columnHeight) {
-  setTextParams(ctx);
-  var offsetY = COLUMN_PADDING_BOTTOM - columnHeight - 10;
-  ctx.fillText(Math.round(time), offsetX, offsetY);
-};
+    return Math.round(divisionValue * time);
+  };
 
-var outputTitle = function (ctx) {
-  setTextParams(ctx);
-  var offsetX = CLOUD_X + 20;
-  var offsetY = CLOUD_Y + 30;
-  ctx.fillText('Ура, Вы победили!', offsetX, offsetY);
-  ctx.fillText('Список результатов:', offsetX, offsetY + 20);
-};
+  var getColumnColor = function (name) {
+    if (name === 'Вы') {
+      return MY_COLUMN_COLOR;
+    }
 
-window.renderStatistics = function (ctx, names, times) {
-  renderRectangle(ctx, SHADOW_COLOR, SHADOW_X, SHADOW_Y, CLOUD_WIDTH, CLOUD_HEIGHT);
-  renderRectangle(ctx, CLOUD_COLOR, CLOUD_X, CLOUD_Y, CLOUD_WIDTH, CLOUD_HEIGHT);
-  outputTitle(ctx);
+    var lightness = Math.floor(Math.random() * 100);
+    return 'hsl(240, 100%, ' + lightness + '%)';
+  };
 
-  var startOffsetX = PADDING_LEFT;
+  var setTextParams = function (ctx) {
+    ctx.font = FONT;
+    ctx.fillStyle = TEXT_COLOR;
+  };
 
-  for (var i = 0; i < times.length; i++) {
-    var columnHeight = getColumnHeight(times, times[i]);
-    var columnColor = getColumnColor(names[i]);
+  var outputName = function (ctx, name, nameX, nameY) {
+    setTextParams(ctx);
+    ctx.fillText(name, nameX, nameY);
+  };
 
-    outputName(ctx, startOffsetX, names[i]);
-    outputTime(ctx, startOffsetX, times[i], columnHeight);
-    renderRectangle(ctx, columnColor, startOffsetX, COLUMN_PADDING_BOTTOM, COLUMN_WIDTH, -columnHeight);
+  var outputTime = function (ctx, time, timeX, columnHeight) {
+    setTextParams(ctx);
+    var timeY = CLOUD_BOTTOM_Y - COLUMN_OFFSET_FROM_BOTTOM - columnHeight - TIME_PADDING_BOTTOM;
+    ctx.fillText(Math.round(time), timeX, timeY);
+  };
 
-    startOffsetX += NEXT_COLUMN_X;
-  }
-};
+  var outputTitle = function (ctx, titleX, titleY) {
+    setTextParams(ctx);
+    ctx.fillText('Ура, Вы победили!', titleX, titleY);
+    ctx.fillText('Список результатов:', titleX, titleY + TITLE_SECOND_ROW_OFFSET_Y);
+  };
+
+  window.renderStatistics = function (ctx, names, times) {
+    renderRectangle(ctx, SHADOW_X, SHADOW_Y, CLOUD_WIDTH, CLOUD_HEIGHT, SHADOW_COLOR);
+    renderRectangle(ctx, CLOUD_X, CLOUD_Y, CLOUD_WIDTH, CLOUD_HEIGHT, CLOUD_COLOR);
+    outputTitle(ctx, TITLE_X, TITLE_Y);
+
+    var startColumnX = CONTENT_OFFSET_X;
+    var startColumnY = CLOUD_BOTTOM_Y - COLUMN_OFFSET_FROM_BOTTOM;
+
+    for (var i = 0; i < times.length; i++) {
+      var columnHeight = getColumnHeight(times, times[i]);
+      var columnColor = getColumnColor(names[i]);
+
+      outputName(ctx, names[i], startColumnX, TEXT_Y);
+      outputTime(ctx, times[i], startColumnX, columnHeight);
+      IS_HIST_COLUMN = toggleIsHistColumn(IS_HIST_COLUMN);
+      renderRectangle(ctx, startColumnX, startColumnY, COLUMN_WIDTH, columnHeight, columnColor);
+      IS_HIST_COLUMN = toggleIsHistColumn(IS_HIST_COLUMN);
+      startColumnX += NEXT_COLUMN_X;
+    }
+  };
+})();
