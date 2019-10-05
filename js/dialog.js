@@ -2,6 +2,7 @@
 
 (function () {
   var settingsPopup = document.querySelector('.setup');
+  var settingsForm = settingsPopup.querySelector('.setup-wizard-form');
   var settingsPopupPosition = getComputedStyle(settingsPopup);
   var settingsPopupStartX = settingsPopupPosition.getPropertyValue('left');
   var settingsPopupStartY = settingsPopupPosition.getPropertyValue('top');
@@ -16,6 +17,10 @@
     popup.style.top = coordY;
   };
 
+  var uploadMyWizardProps = function () {
+    settingsPopup.classList.add('hidden');
+  };
+
   var onKeydown = function (evt) {
     var focusedElement = document.activeElement;
     if (evt.keyCode === window.util.ESCAPE_KEYCODE && focusedElement !== userName) {
@@ -24,6 +29,7 @@
   };
 
   var onOpenButtonClick = function () {
+    window.backend.load(window.setup.renderWizards, window.showErrorMessage);
     settingsPopup.classList.remove('hidden');
   };
 
@@ -42,6 +48,11 @@
     if (evt.keyCode === window.util.ENTER_KEYCODE) {
       onOpenButtonClick();
     }
+  };
+
+  var onFormSubmit = function (evt) {
+    window.backend.save(new FormData(settingsForm), uploadMyWizardProps, window.backend.showErrorMessage);
+    evt.preventDefault();
   };
 
   document.addEventListener('keydown', onKeydown);
@@ -94,8 +105,5 @@
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   });
-
-  window.dialog = {
-    settingsPopup: settingsPopup
-  };
+  settingsForm.addEventListener('submit', onFormSubmit);
 })();

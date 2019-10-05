@@ -1,52 +1,29 @@
 'use strict';
 (function () {
-
-  var myWizard = window.dialog.settingsPopup.querySelector('.setup-player');
-  var similarWizardsContainer = window.dialog.settingsPopup.querySelector('.setup-similar');
+  var myWizard = document.querySelector('.setup-player');
+  var similarWizardsContainer = document.querySelector('.setup-similar');
   var similarWizardsList = similarWizardsContainer.querySelector('.setup-similar-list');
   var eyesColorInput = myWizard.querySelector('input[name="eyes-color"]');
   var coatColorInput = myWizard.querySelector('input[name="coat-color"]');
   var fireballColorInput = myWizard.querySelector('input[name="fireball-color"]');
 
-  var getWizardProps = function (firstNames, lastNames, coatColors, eyesColors) {
-    var firstName = window.util.getArrayElement(firstNames);
-    var lastName = window.util.getArrayElement(lastNames);
-    var coatColor = window.util.getArrayElement(coatColors);
-    var eyesColor = window.util.getArrayElement(eyesColors);
-
-    return {name: firstName + ' ' + lastName, coatColor: coatColor, eyesColor: eyesColor};
-  };
-
-  var getAllWizardsProps = function (wizards) {
-    var WIZARDS_PROPS = [];
-
-    for (var i = 0; i < wizards.amountOfwizards; i++) {
-      var wizardProps = getWizardProps(
-          wizards.firstNames,
-          wizards.lastNames,
-          wizards.coatColors,
-          wizards.eyesColors
-      );
-      WIZARDS_PROPS.push(wizardProps);
-    }
-
-    return WIZARDS_PROPS;
-  };
-
   var renderWizards = function (wizardsProps) {
+    similarWizardsList.innerHTML = '';
+    var amountOfWizards = 4;
     var fragment = new DocumentFragment();
 
-    for (var j = 0; j < wizardsProps.length; j++) {
+    for (var j = 0; j < amountOfWizards; j++) {
+      var wizard = window.util.getArrayElement(wizardsProps);
       var template = document.querySelector('#similar-wizard-template').content.cloneNode(true);
 
       var name = template.querySelector('.setup-similar-label');
-      name.textContent = wizardsProps[j].name;
+      name.textContent = wizard.name;
 
       var wizardCoat = template.querySelector('.wizard-coat');
-      wizardCoat.style.fill = wizardsProps[j].coatColor;
+      wizardCoat.style.fill = wizard.colorCoat;
 
       var wizardEyes = template.querySelector('.wizard-eyes');
-      wizardEyes.style.fill = wizardsProps[j].eyesColor;
+      wizardEyes.style.fill = wizard.colorEyes;
 
       fragment.appendChild(template);
     }
@@ -54,9 +31,6 @@
     similarWizardsList.appendChild(fragment);
     similarWizardsContainer.classList.remove('hidden');
   };
-
-  var ALL_WIZARDS_PROPS = getAllWizardsProps(window.util.WIZARDS, window.util.WIZARDS, window.util.WIZARDS, window.util.WIZARDS, window.util.WIZARDS);
-  renderWizards(ALL_WIZARDS_PROPS);
 
   var switchColor = function (colorsArray) {
     var colorsNumber = colorsArray.length;
@@ -73,9 +47,9 @@
     };
   };
 
-  var chooseEyesColor = switchColor(window.util.WIZARDS.eyesColors);
-  var chooseCoatColor = switchColor(window.util.WIZARDS.coatColors);
-  var chooseFireballColor = switchColor(window.util.WIZARDS.fireballColors);
+  var chooseEyesColor = switchColor(window.util.WIZARDS_PROPS.colorEyes);
+  var chooseCoatColor = switchColor(window.util.WIZARDS_PROPS.colorCoat);
+  var chooseFireballColor = switchColor(window.util.WIZARDS_PROPS.colorFireball);
 
   var setMyWizardPartColor = function (color, part, input) {
     input.value = color;
@@ -108,4 +82,8 @@
   };
 
   myWizard.addEventListener('click', onMyWizardClick);
+
+  window.setup = {
+    renderWizards: renderWizards
+  };
 })();
