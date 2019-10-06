@@ -29,7 +29,7 @@
   };
 
   var onOpenButtonClick = function () {
-    window.backend.load(window.setup.renderWizards, window.backend.showErrorMessage);
+    window.backend.load(null, window.setup.renderWizards);
   };
 
   var onCloseButtonClick = function () {
@@ -50,7 +50,7 @@
   };
 
   var onFormSubmit = function (evt) {
-    window.backend.save(new FormData(settingsForm), uploadMyWizardProps, window.backend.showErrorMessage);
+    window.backend.save(new FormData(settingsForm), uploadMyWizardProps);
     evt.preventDefault();
   };
 

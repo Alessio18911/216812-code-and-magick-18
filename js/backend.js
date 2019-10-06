@@ -21,8 +21,7 @@
     document.body.insertAdjacentElement('afterbegin', errorWindow);
   }
 
-  function load(onLoad, onError) {
-    var url = 'https://js.dump.academy/code-and-magick/data';
+  function httpRequest(url, method, data, callback) {
     var xhr = new XMLHttpRequest();
 
     xhr.addEventListener('load', function () {
@@ -30,7 +29,7 @@
 
       switch (xhr.status) {
         case 200:
-          onLoad(JSON.parse(xhr.responseText));
+          callback(JSON.parse(xhr.responseText));
           break;
 
         case 400:
@@ -46,70 +45,35 @@
           break;
 
         default:
-          error = 'Ошибка ' + xhr.status + ' ' + xhr.responseText;
+          error = 'Ошибка ' + xhr.status;
       }
 
       if (error) {
-        onError(error);
+        showErrorMessage(error);
       }
     });
 
     xhr.addEventListener('error', function () {
-      onError('Произошла ошибка соединения');
+      showErrorMessage('Произошла ошибка соединения');
     });
 
     xhr.addEventListener('timeout', function () {
-      onError('Запрос не выполнился за ' + xhr.timeout / 1000 + ' секунд');
+      showErrorMessage('Запрос не выполнился за ' + xhr.timeout / 1000 + ' секунд');
     });
 
-    xhr.open('GET', url);
-    xhr.send();
+    xhr.open(method, url);
+    xhr.send(data);
     xhr.timeout = 10000;
   }
 
-  function save(data, onLoad, onError) {
+  function load(data, onLoad) {
+    var url = 'https://js.dump.academy/code-and-magick/data';
+    httpRequest(url, 'GET', data, onLoad);
+  }
+
+  function save(data, onLoad) {
     var url = 'https://js.dump.academy/code-and-magick';
-    var xhr = new XMLHttpRequest();
-
-    xhr.addEventListener('load', function () {
-      var error;
-
-      switch (xhr.status) {
-        case 200:
-          onLoad(JSON.parse(xhr.responseText));
-          break;
-
-        case 400:
-          error = 'Неверный запрос';
-          break;
-
-        case 401:
-          error = 'Пользователь не авторизован';
-          break;
-
-        case 404:
-          error = 'Ничего не найдено';
-          break;
-
-        default:
-          error = 'Ошибка ' + xhr.status + ' ' + xhr.responseText;
-      }
-
-      if (error) {
-        onError(error);
-      }
-    });
-
-    xhr.addEventListener('error', function () {
-      onError('Произошла ошибка соединения');
-    });
-
-    xhr.addEventListener('timeout', function () {
-      onError('Запрос не выполнился за ' + xhr.timeout / 1000 + ' секунд');
-    });
-
-    xhr.open('POST', url);
-    xhr.send(data);
+    httpRequest(url, 'POST', data, onLoad);
   }
 
   window.backend = {
