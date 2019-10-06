@@ -2,6 +2,7 @@
 
 (function () {
   var settingsPopup = document.querySelector('.setup');
+  var settingsForm = settingsPopup.querySelector('.setup-wizard-form');
   var settingsPopupPosition = getComputedStyle(settingsPopup);
   var settingsPopupStartX = settingsPopupPosition.getPropertyValue('left');
   var settingsPopupStartY = settingsPopupPosition.getPropertyValue('top');
@@ -16,6 +17,10 @@
     popup.style.top = coordY;
   };
 
+  var uploadMyWizardProps = function () {
+    settingsPopup.classList.add('hidden');
+  };
+
   var onKeydown = function (evt) {
     var focusedElement = document.activeElement;
     if (evt.keyCode === window.util.ESCAPE_KEYCODE && focusedElement !== userName) {
@@ -24,7 +29,7 @@
   };
 
   var onOpenButtonClick = function () {
-    settingsPopup.classList.remove('hidden');
+    window.backend.load(null, window.setup.renderWizards);
   };
 
   var onCloseButtonClick = function () {
@@ -42,6 +47,11 @@
     if (evt.keyCode === window.util.ENTER_KEYCODE) {
       onOpenButtonClick();
     }
+  };
+
+  var onFormSubmit = function (evt) {
+    window.backend.save(new FormData(settingsForm), uploadMyWizardProps);
+    evt.preventDefault();
   };
 
   document.addEventListener('keydown', onKeydown);
@@ -94,6 +104,7 @@
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   });
+  settingsForm.addEventListener('submit', onFormSubmit);
 
   window.dialog = {
     settingsPopup: settingsPopup
