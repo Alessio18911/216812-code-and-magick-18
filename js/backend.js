@@ -2,7 +2,23 @@
 
 (function () {
   function showErrorMessage(message) {
-    console.error(message);
+    var errorWindow = document.createElement('div');
+    errorWindow.style.width = '500px';
+    errorWindow.style.minHeight = '250px';
+    errorWindow.style.padding = '30px';
+    errorWindow.style.position = 'absolute';
+    errorWindow.style.top = 'calc(50% - 150px)';
+    errorWindow.style.left = 'calc(50% - 250px)';
+    errorWindow.style.zIndex = 5;
+    errorWindow.style.fontSize = '16px';
+    errorWindow.style.color = 'red';
+    errorWindow.style.backgroundColor = 'lightblue';
+    errorWindow.style.borderRadius = '70px 20px';
+    errorWindow.style.boxSizing = 'border-box';
+    errorWindow.style.wordWrap = 'break-word';
+    errorWindow.textContent = message + '. Перезагрузите страницу и повторите действие';
+
+    document.body.insertAdjacentElement('afterbegin', errorWindow);
   }
 
   function load(onLoad, onError) {

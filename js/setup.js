@@ -8,6 +8,7 @@
   var fireballColorInput = myWizard.querySelector('input[name="fireball-color"]');
 
   var renderWizards = function (wizardsProps) {
+    window.dialog.settingsPopup.classList.remove('hidden');
     similarWizardsList.innerHTML = '';
     var amountOfWizards = 4;
     var fragment = new DocumentFragment();

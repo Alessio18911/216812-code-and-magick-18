@@ -29,8 +29,7 @@
   };
 
   var onOpenButtonClick = function () {
-    window.backend.load(window.setup.renderWizards, window.showErrorMessage);
-    settingsPopup.classList.remove('hidden');
+    window.backend.load(window.setup.renderWizards, window.backend.showErrorMessage);
   };
 
   var onCloseButtonClick = function () {
@@ -106,4 +105,8 @@
     document.addEventListener('mouseup', onMouseUp);
   });
   settingsForm.addEventListener('submit', onFormSubmit);
+
+  window.dialog = {
+    settingsPopup: settingsPopup
+  };
 })();
